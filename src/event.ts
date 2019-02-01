@@ -81,7 +81,7 @@ class MisskeyEvent {
 		(async () => {
 			const user = await User.findById(notification.user) as IUser;
 			this.publish(`notification`, JSON.stringify({
-				targetId: user,
+				targetId: user.id,
 				notification: await serializeNotification(notification, user),
 			}));
 		})().catch(error => console.error("Notification Publish Error", error));
