@@ -1,8 +1,9 @@
 import * as redis from 'redis';
-import {UserFollowing} from './db/db';
+import {UserFollowing, User} from './db/db';
 import {IUser, IPost, IRepost, IUserFollowing, INotification, ITalkGroup, ITalkMessage, ITalkUserMessage} from './db/interfaces';
 import config from './config';
 import serializePost from './core/serialize-post';
+import serializeNotification from './core/serialize-notification';
 
 export interface MisskeyEventMessage {
 	type: string;
@@ -77,6 +78,13 @@ class MisskeyEvent {
 				id: notification.id
 			}
 		}));
+		(async () => {
+			const user = await User.findById(notification.user) as IUser;
+			this.publish(`notification`, JSON.stringify({
+				targetId: user.id,
+				notification: await serializeNotification(notification, user),
+			}));
+		})().catch(error => console.error("Notification Publish Error", error));
 	}
 
 	public subscribeUserStream(userID: string, onMessage: (messsage: MisskeyEventMessage) => any): redis.RedisClient {
