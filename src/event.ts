@@ -3,7 +3,6 @@ import {UserFollowing, User} from './db/db';
 import {IUser, IPost, IRepost, IUserFollowing, INotification, ITalkGroup, ITalkMessage, ITalkUserMessage} from './db/interfaces';
 import config from './config';
 import serializePost from './core/serialize-post';
-import show from './endpoints/notifications/show';
 import serializeNotification from './core/serialize-notification';
 
 export interface MisskeyEventMessage {
